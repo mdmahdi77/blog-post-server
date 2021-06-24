@@ -21,6 +21,7 @@ console.log(uri)
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 client.connect(err => {
   const blogCollection = client.db("BlogPost").collection("post");
+  const adminCollection = client.db("BlogPost").collection("admin");
   
 
   app.post('/addBlog', (req, res) => {
@@ -42,6 +43,23 @@ client.connect(err => {
     blogCollection.deleteOne({_id: ObjectId(req.params.id)})
     .then( result => {
       res.send(result.deletedCount)
+    })
+  })
+
+  app.post('/addAdmin', (req, res) => {
+    const admin = req.body
+    adminCollection.insertOne(admin)
+    .then( result => {
+      console.log(result)
+      res.send(result.insertedCount > 0)
+    })
+  })
+
+  app.post('/isAdmin', (req, res) => {
+    const email = req.body.email
+    adminCollection.find({email: email})
+    .toArray((err, admin) => {
+      res.send(admin.length > 0)
     })
   })
 
