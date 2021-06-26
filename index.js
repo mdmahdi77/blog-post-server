@@ -28,6 +28,7 @@ client.connect(err => {
     const blog = req.body
     blogCollection.insertOne(blog)
     .then(results => {
+      console.log(results)
       res.send(results.insertedCount > 0)
     })
   })
@@ -42,6 +43,7 @@ client.connect(err => {
   app.delete('/delete/:id', (req, res) => {
     blogCollection.deleteOne({_id: ObjectId(req.params.id)})
     .then( result => {
+      console.log(result)
       res.send(result.deletedCount)
     })
   })
